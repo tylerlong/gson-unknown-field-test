@@ -3,12 +3,17 @@
  */
 package gson.unknown.field.test;
 
+import com.google.gson.Gson;
+
+class Test {
+    public String a;
+}
+
 public class App {
-    public String getGreeting() {
-        return "Hello World!";
-    }
+    public static Gson gson = new Gson();
 
     public static void main(String[] args) {
-        System.out.println(new App().getGreeting());
+        Test test = gson.fromJson("{\"a\": 1, \"b\": 2}", Test.class);
+        System.out.println(test.a);
     }
 }
