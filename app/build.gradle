@@ -26,5 +26,5 @@ dependencies {
 
 application {
     // Define the main class for the application.
-    mainClass = 'java.gson.unknown.field.test.App'
+    mainClass = 'gson.unknown.field.test.App'
 }
