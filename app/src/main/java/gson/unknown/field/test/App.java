@@ -4,6 +4,10 @@
 package gson.unknown.field.test;
 
 import com.google.gson.Gson;
+import com.ringcentral.definitions.GetExtensionInfoResponse;
+import com.ringcentral.RestClient;
+import com.ringcentral.RestException;
+import java.io.IOException;
 
 class Test {
     public String a;
@@ -12,8 +16,30 @@ class Test {
 public class App {
     public static Gson gson = new Gson();
 
-    public static void main(String[] args) {
-        Test test = gson.fromJson("{\"a\": 1, \"b\": 2}", Test.class);
+    public static void main(String[] args) throws IOException, RestException  {
+        String jsonString = "{\"a\": 1, \"b\": 2}";
+
+        // google gson
+        Test test = gson.fromJson(jsonString, Test.class);
         System.out.println(test.a);
+
+        // alibaba fastjson
+        Test test2 = com.alibaba.fastjson.JSON.parseObject(jsonString, Test.class);
+        System.out.println(test2.a);
+
+        // RC get extension
+        RestClient rc = new RestClient(
+            System.getenv("RINGCENTRAL_CLIENT_ID"),
+            System.getenv("RINGCENTRAL_CLIENT_SECRET"),
+            System.getenv("RINGCENTRAL_SERVER_URL")
+        );
+        rc.authorize(
+            System.getenv("RINGCENTRAL_USERNAME"),
+            System.getenv("RINGCENTRAL_EXTENSION"),
+            System.getenv("RINGCENTRAL_PASSWORD")
+        );
+        GetExtensionInfoResponse extensionInfo = rc.restapi().account().extension().get();
+        System.out.println(extensionInfo.extensionNumber);
+        rc.revoke();
     }
 }
